@@ -12,5 +12,13 @@
   ],
   "author": "Karla_Frias <kfriram@gmail.com>",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "fractional": "^1.0.0",
+    "fracty": "^1.0.12",
+    "parcel": "^2.15.4"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.15.4"
+  }
 }
