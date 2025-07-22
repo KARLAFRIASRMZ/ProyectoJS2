@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama UML - Proyecto Forkify</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .diagram-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .description {
+            margin-top: 30px;
+            line-height: 1.6;
+            color: #555;
+        }
+        .architecture-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .architecture-info h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diagrama UML - Aplicación Forkify</h1>
+        
+        <div class="diagram-container">
+            <img src="forkify-uml-diagram.png" alt="Diagrama UML de la aplicación Forkify">
+        </div>
+        
+        <div class="description">
+            <h2>Descripción del Proyecto</h2>
+            <p>
+                <strong>Forkify</strong> es una aplicación web de recetas desarrollada en JavaScript que implementa 
+                el patrón de arquitectura <strong>MVC (Model-View-Controller)</strong>. La aplicación permite a los 
+                usuarios buscar recetas, ver detalles de recetas individuales y navegar por los resultados con paginación.
+            </p>
+            
+            <div class="architecture-info">
+                <h3>Componentes Principales:</h3>
+                <ul>
+                    <li><strong>Model (Modelo):</strong> Maneja el estado de la aplicación y la comunicación con la API externa</li>
+                    <li><strong>Views (Vistas):</strong> Conjunto de clases que manejan la presentación y renderizado del DOM</li>
+                    <li><strong>Controller (Controlador):</strong> Coordina las interacciones entre el modelo y las vistas</li>
+                    <li><strong>Utilities (Utilidades):</strong> Funciones auxiliares y configuración de la aplicación</li>
+                </ul>
+                
+                <h3>Características Técnicas:</h3>
+                <ul>
+                    <li>Patrón MVC implementado con JavaScript ES6+</li>
+                    <li>Comunicación asíncrona con API externa (Forkify API)</li>
+                    <li>Manejo de estado centralizado</li>
+                    <li>Interfaz reactiva con renderizado dinámico</li>
+                    <li>Sistema de paginación para resultados de búsqueda</li>
+                    <li>Manejo de errores y estados de carga</li>
+                    <li>Bundling con Parcel</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

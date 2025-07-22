@@ -1,0 +1,184 @@
+@startuml Forkify Application Architecture
+
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
+
+title Forkify Recipe Application - UML Class Diagram
+
+package "Model Layer" {
+    class Model {
+        +state: Object
+        +loadRecipe(id: string): Promise<void>
+        +loadSearchResults(query: string): Promise<void>
+        +getSearchResultsPage(page?: number): Array<Recipe>
+    }
+    
+    class State {
+        +recipe: Recipe
+        +search: SearchState
+    }
+    
+    class Recipe {
+        +id: string
+        +title: string
+        +publisher: string
+        +sourceUrl: string
+        +image: string
+        +servings: number
+        +cookingTime: number
+        +ingredients: Array<Ingredient>
+    }
+    
+    class SearchState {
+        +query: string
+        +results: Array<SearchResult>
+        +page: number
+        +resultsPerPage: number
+    }
+    
+    class SearchResult {
+        +id: string
+        +title: string
+        +publisher: string
+        +image: string
+    }
+}
+
+package "View Layer" {
+    abstract class View {
+        #_data: any
+        #_parentElement: HTMLElement
+        #_errorMessage: string
+        #_message: string
+        +render(data: any): void
+        +renderSpinner(): void
+        +renderError(message?: string): void
+        +renderMessage(message?: string): void
+        #_clear(): void
+        #{abstract} _generateMarkup(): string
+    }
+    
+    class RecipeView extends View {
+        -_parentElement: HTMLElement
+        -_errorMessage: string
+        -_message: string
+        +addHandlerRender(handler: Function): void
+        +render(data: Recipe): void
+        +renderSpinner(): void
+        +renderError(): void
+        -_generateMarkup(): string
+    }
+    
+    class SearchView {
+        -_parentEl: HTMLElement
+        +getQuery(): string
+        +addHandlerSearch(handler: Function): void
+        -#clearInput(): void
+    }
+    
+    class ResultsView extends View {
+        -_parentElement: HTMLElement
+        -_errorMessage: string
+        +render(data: Array<SearchResult>): void
+        -_generateMarkup(): string
+        -_generateMarkupPreview(result: SearchResult): string
+    }
+    
+    class PaginationView extends View {
+        -_parentElement: HTMLElement
+        +addHandlerClick(handler: Function): void
+        +render(data: SearchState): void
+        -_generateMarkup(): string
+        -_generateMarkupButton(page: number, type: string): string
+    }
+}
+
+package "Controller Layer" {
+    class Controller {
+        +controlRecipes(): Promise<void>
+        +controlSearchResults(): Promise<void>
+        +controlPagination(goToPage: number): void
+        +init(): void
+    }
+}
+
+package "Utilities" {
+    class Config {
+        +API_URL: string
+        +TIMEOUT_SEC: number
+        +RES_PER_PAGE: number
+    }
+    
+    class Helpers {
+        +timeout(sec: number): Promise<Error>
+        +getJSON(url: string): Promise<any>
+    }
+}
+
+package "External Dependencies" {
+    class ParcelBundler {
+        +bundle application
+        +handle assets
+    }
+    
+    class ForkifyAPI {
+        +getRecipe(id: string): Promise<Recipe>
+        +searchRecipes(query: string): Promise<Array<SearchResult>>
+    }
+    
+    class FractyLibrary {
+        +format fractions
+    }
+}
+
+' Relationships
+Controller --> Model : uses
+Controller --> RecipeView : controls
+Controller --> SearchView : controls
+Controller --> ResultsView : controls
+Controller --> PaginationView : controls
+
+Model --> State : manages
+Model --> Helpers : uses
+Model --> Config : uses
+Model --> ForkifyAPI : fetches from
+
+State --> Recipe : contains
+State --> SearchState : contains
+SearchState --> SearchResult : contains array of
+
+View <|-- RecipeView
+View <|-- ResultsView
+View <|-- PaginationView
+
+RecipeView --> FractyLibrary : uses for formatting
+SearchView ..> Controller : notifies via events
+PaginationView ..> Controller : notifies via events
+
+Helpers --> Config : uses
+Model --> ForkifyAPI : HTTP requests
+
+' Notes
+note right of Controller
+  Main application controller
+  implementing MVC pattern.
+  Coordinates between Model
+  and Views.
+end note
+
+note left of Model
+  Contains application state
+  and business logic.
+  Handles API communication.
+end note
+
+note bottom of View
+  Abstract base class for
+  all view components.
+  Implements common rendering
+  functionality.
+end note
+
+@enduml
