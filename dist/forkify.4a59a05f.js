@@ -851,7 +851,7 @@ const timeout = (sec)=>{
 };
 const getJSON = async function(url) {
     try {
-        // v‑1‑a. declaración de res
+        // v‑1‑a. declaración de resp
         const fetchPro = fetch(url);
         const resp = await Promise.race([
             fetchPro,
@@ -859,7 +859,7 @@ const getJSON = async function(url) {
         ]);
         // v‑1‑b. declaración de data
         const data = await resp.json();
-        // v‑1‑c. validación de res
+        // v‑1‑c. validación de resp
         if (!resp.ok) throw new Error(`${data.message} (${resp.status})`);
         return data;
     } catch (err) {
@@ -883,8 +883,8 @@ class RecipeView {
     _message = "Operation was successful!";
     render(data) {
         this._data = data;
-        const markup = this.#generateMarkup();
-        this.#clear();
+        const markup = this._generateMarkup();
+        this._clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
     renderSpinner() {
@@ -916,7 +916,7 @@ class RecipeView {
   <p>${message}</p>
   </div>
   `;
-        this.#clear();
+        this._clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
     renderMessage(message = this._message) {
@@ -931,7 +931,7 @@ class RecipeView {
       <p>${message}</p>
     </div>
   `;
-        this.#clear();
+        this._clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
     // Ejecutar controlRecipes cuando cambia el hash o se carga la página
@@ -941,10 +941,10 @@ class RecipeView {
             "load"
         ].forEach((ev)=>window.addEventListener(ev, handler));
     }
-    #clear() {
+    _clear() {
         this._parentElement.innerHTML = "";
     }
-    #generateMarkup() {
+    _generateMarkup() {
         return `
     <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
@@ -958,7 +958,7 @@ class RecipeView {
             <svg class="recipe__info-icon">
               <use href="${0, _iconsSvgDefault.default}#icon-clock"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookTime}</span>
+            <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookingTime}</span>
             <span class="recipe__info-text">minutes</span>
           </div>
 

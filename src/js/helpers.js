@@ -11,14 +11,14 @@ export const timeout = sec => {
 export const getJSON = async function (url) {
     try {
 
-        // v‑1‑a. declaración de res
+        // v‑1‑a. declaración de resp
         const fetchPro = fetch(url);
         const resp = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
 
         // v‑1‑b. declaración de data
         const data = await resp.json();
 
-        // v‑1‑c. validación de res
+        // v‑1‑c. validación de resp
         if (!resp.ok) throw new Error(`${data.message} (${resp.status})`);
         return data;
     } catch (err) {

@@ -13,8 +13,8 @@ class RecipeView {
 
   render(data) {
     this._data = data;
-    const markup = this.#generateMarkup();
-    this.#clear();
+    const markup = this._generateMarkup();
+    this._clear();
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
@@ -49,7 +49,7 @@ class RecipeView {
   <p>${message}</p>
   </div>
   `;
-    this.#clear();
+    this._clear();
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
@@ -65,7 +65,7 @@ class RecipeView {
       <p>${message}</p>
     </div>
   `;
-    this.#clear();
+    this._clear();
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
@@ -76,11 +76,11 @@ class RecipeView {
     );
   }
 
-  #clear() {
+  _clear() {
     this._parentElement.innerHTML = "";
   }
 
-  #generateMarkup() {
+  _generateMarkup() {
     return `
     <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${this._data.title
@@ -95,8 +95,7 @@ class RecipeView {
             <svg class="recipe__info-icon">
               <use href="${icons}#icon-clock"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookTime
-      }</span>
+            <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookingTime}</span>
             <span class="recipe__info-text">minutes</span>
           </div>
 
@@ -104,8 +103,7 @@ class RecipeView {
             <svg class="recipe__info-icon">
               <use href="${icons}#icon-users"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--people">${this._data.servings
-      }</span>
+            <span class="recipe__info-data recipe__info-data--people">${this._data.servings}</span>
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
