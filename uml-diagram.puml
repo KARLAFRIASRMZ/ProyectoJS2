@@ -1,0 +1,150 @@
+@startuml Forkify Application UML Diagram
+
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam packageStyle rectangle
+
+title Forkify Recipe Application - UML Class Diagram
+
+package "Configuration" {
+  class Config {
+    +API_URL: string = "https://forkify-api.herokuapp.com/api/v2/recipes/"
+    +TIMEOUT_SEC: number = 5
+    +RES_PER_PAGE: number = 10
+  }
+}
+
+package "Helpers" {
+  class Helpers {
+    +timeout(sec: number): Promise
+    +getJSON(url: string): Promise<any>
+  }
+}
+
+package "Model" {
+  class Model {
+    +state: State
+    +loadRecipe(id: string): Promise<void>
+    +loadSearchResults(query: string): Promise<void>
+    +getSearchResultsPage(page?: number): Recipe[]
+  }
+  
+  class State {
+    +recipe: Recipe
+    +search: SearchState
+  }
+  
+  class Recipe {
+    +id: string
+    +title: string
+    +publisher: string
+    +sourceUrl: string
+    +image: string
+    +servings: number
+    +cookingTime: number
+    +ingredients: Ingredient[]
+  }
+  
+  class SearchState {
+    +query: string
+    +results: Recipe[]
+    +page: number
+    +resultsPerPage: number
+  }
+  
+  class Ingredient {
+    +quantity: number
+    +unit: string
+    +description: string
+  }
+}
+
+package "Views" {
+  abstract class View {
+    #_data: any
+    #_parentElement: HTMLElement
+    #_errorMessage: string
+    #_message: string
+    +render(data: any): void
+    +renderSpinner(): void
+    +renderError(message?: string): void
+    +renderMessage(message?: string): void
+    #_clear(): void
+    #{abstract} _generateMarkup(): string
+  }
+  
+  class RecipeView {
+    -_parentElement: HTMLElement = document.querySelector(".recipe")
+    -_errorMessage: string = "We could not find that recipe..."
+    +render(data: Recipe): void
+    +renderSpinner(): void
+    +addHandlerRender(handler: Function): void
+    +renderError(message?: string): void
+    -_generateMarkup(): string
+  }
+  
+  class SearchView {
+    -_parentEl: HTMLElement = document.querySelector('.search')
+    +getQuery(): string
+    +addHandlerSearch(handler: Function): void
+    -#clearInput(): void
+  }
+  
+  class ResultsView {
+    -_parentElement: HTMLElement = document.querySelector('.results')
+    -_errorMessage: string = "No se encontraron recetas..."
+    -_generateMarkup(): string
+    -_generateMarkupPreview(result: Recipe): string
+  }
+  
+  class PaginationView {
+    -_parentElement: HTMLElement = document.querySelector('.pagination')
+    +addHandlerClick(handler: Function): void
+    -_generateMarkup(): string
+  }
+}
+
+package "Controller" {
+  class Controller {
+    +controlRecipes(): Promise<void>
+    +controlSearchResults(query: string): Promise<void>
+    +controlPagination(goToPage: number): void
+    +init(): void
+  }
+}
+
+' Relationships
+Model ||--|| State : contains
+State ||--|| Recipe : contains recipe
+State ||--|| SearchState : contains search
+SearchState ||--o{ Recipe : contains results
+Recipe ||--o{ Ingredient : contains
+
+View <|-- RecipeView : extends
+View <|-- ResultsView : extends
+View <|-- PaginationView : extends
+
+Controller --> Model : uses
+Controller --> RecipeView : controls
+Controller --> SearchView : controls
+Controller --> ResultsView : controls
+Controller --> PaginationView : controls
+
+Model --> Helpers : uses
+Model --> Config : uses
+Helpers --> Config : uses
+
+SearchView --> Controller : notifies
+PaginationView --> Controller : notifies
+RecipeView --> Controller : notifies
+
+note top of Model : "Manages application state\nand data operations"
+
+note top of View : "Base class for all views\nHandles common UI operations"
+
+note top of Controller : "Coordinates between\nModel and Views"
+
+note right of Config : "Application constants\nand configuration"
+
+@enduml
